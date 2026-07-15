@@ -2,22 +2,26 @@
 #include <ctype.h>
 #include <string.h>
 
-char *keywords[] = {
+char *keywords[] = 
+{
     "int", "float", "char", "double", "if", "else", "while",
     "for", "return", "void", "break", "continue", "switch",
     "case", "default", "do", "struct", "long", "short", "const"
 };
 
-int isKeyword(char str[]) {
+int isKeyword(char str[])
+{
     int n = sizeof(keywords) / sizeof(keywords[0]);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) 
+    {
         if (strcmp(str, keywords[i]) == 0)
             return 1;
     }
     return 0;
 }
 
-int main() {
+int main() 
+{
     FILE *fp;
     char ch, buffer[100];
     int i;
@@ -29,30 +33,36 @@ int main() {
         return 0;
     }
 
-    while ((ch = fgetc(fp)) != EOF) {
+    while ((ch = fgetc(fp)) != EOF)
+    {
 
         // Ignore spaces, tabs, newlines
         if (isspace(ch))
             continue;
 
         // Ignore comments
-        if (ch == '/') {
+        if (ch == '/') 
+        {
             char next = fgetc(fp);
 
-            if (next == '/') {
+            if (next == '/') 
+            {
                 while ((ch = fgetc(fp)) != '\n' && ch != EOF);
                 continue;
             }
-            else if (next == '*') {
+            else if (next == '*') 
+            {
                 char prev = 0;
-                while ((ch = fgetc(fp)) != EOF) {
+                while ((ch = fgetc(fp)) != EOF)
+                {
                     if (prev == '*' && ch == '/')
                         break;
                     prev = ch;
                 }
                 continue;
             }
-            else {
+            else 
+            {
                 printf("/\t\tOperator\n");
                 ungetc(next, fp);
                 continue;
@@ -60,7 +70,8 @@ int main() {
         }
 
         // Identifier or Keyword
-        if (isalpha(ch) || ch == '_') {
+        if (isalpha(ch) || ch == '_') 
+        {
             i = 0;
             buffer[i++] = ch;
 
@@ -80,14 +91,17 @@ int main() {
         }
 
         // Integer or Float
-        else if (isdigit(ch)) {
+        else if (isdigit(ch)) 
+        {
             i = 0;
             int dot = 0;
             buffer[i++] = ch;
 
             while ((ch = fgetc(fp)) != EOF &&
-                  (isdigit(ch) || ch == '.')) {
-                if (ch == '.') {
+                  (isdigit(ch) || ch == '.'))
+                  {
+                if (ch == '.') 
+                {
                     if (dot)
                         break;
                     dot = 1;
@@ -104,12 +118,14 @@ int main() {
         }
 
         // Operators
-        else if (strchr("+-*=<>!%", ch)) {
+        else if (strchr("+-*=<>!%", ch)) 
+        {
             printf("%-12c Operator\n", ch);
         }
 
         // Delimiters
-        else if (strchr("(){}[];,", ch)) {
+        else if (strchr("(){}[];,", ch))
+        {
             printf("%-12c Delimiter\n", ch);
         }
     }
